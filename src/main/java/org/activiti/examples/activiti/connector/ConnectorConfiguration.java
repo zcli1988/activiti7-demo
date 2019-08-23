@@ -1,4 +1,4 @@
-package org.activiti.examples.connector;
+package org.activiti.examples.activiti.connector;
 
 import org.activiti.api.process.runtime.connector.Connector;
 import org.springframework.context.annotation.Bean;

@@ -1,5 +1,6 @@
 package org.activiti.examples.exception;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -21,10 +22,13 @@ public class GlobalExceptionHandler {
             return "用户不存在";
         }
         if (e instanceof CredentialException) {
-            return "密码错误";
+            return "证书错误";
         }
         if (e instanceof AccessDeniedException) {
             return "不允许访问";
+        }
+        if (e instanceof BadCredentialsException) {
+            return "密码错误";
         }
         return e.getMessage();
     }

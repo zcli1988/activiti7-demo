@@ -1,6 +1,7 @@
-package org.activiti.examples.service;
+package org.activiti.examples.service.impl;
 
 import org.activiti.examples.resp.SuccessResp;
+import org.activiti.examples.service.LoginService;
 import org.activiti.examples.util.UUIDUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
