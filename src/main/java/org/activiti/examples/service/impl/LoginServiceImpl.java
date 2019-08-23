@@ -1,5 +1,6 @@
 package org.activiti.examples.service.impl;
 
+import org.activiti.examples.Config;
 import org.activiti.examples.resp.SuccessResp;
 import org.activiti.examples.service.LoginService;
 import org.activiti.examples.util.UUIDUtil;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author wangkai
@@ -31,7 +33,7 @@ public class LoginServiceImpl implements LoginService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         //redis存储
         String token = UUIDUtil.generateToken();
-        redisTemplate.opsForValue().set(token, username);
+        redisTemplate.opsForValue().set(token, username, Config.expire, TimeUnit.MINUTES);
         return new SuccessResp(token);
     }
 
