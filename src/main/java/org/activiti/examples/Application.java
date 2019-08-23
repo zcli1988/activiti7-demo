@@ -3,23 +3,13 @@ package org.activiti.examples;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import org.activiti.examples.context.HttpMessageConverter;
-import org.activiti.examples.filter.MonitorFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class Application {
-
-    @Bean
-    public FilterRegistrationBean monitorFilter() {
-        FilterRegistrationBean filter = new FilterRegistrationBean();
-        filter.setFilter(new MonitorFilter());
-        filter.setOrder(1);
-        return filter;
-    }
 
     @Bean
     public HttpMessageConverters fastJsonHttpMessageConverters() {

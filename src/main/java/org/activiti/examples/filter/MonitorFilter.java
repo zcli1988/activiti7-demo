@@ -1,5 +1,12 @@
 package org.activiti.examples.filter;
 
+import io.micrometer.core.instrument.util.StringUtils;
+import org.activiti.examples.context.GlobalResult;
+import org.activiti.examples.context.LocalUtil;
+import org.activiti.examples.resp.SuccessResp;
+import org.springframework.boot.web.servlet.filter.OrderedFilter;
+import org.springframework.stereotype.Component;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,7 +18,14 @@ import java.io.IOException;
  * @author wangkai
  * @since JDK8
  */
-public class MonitorFilter implements Filter {
+@Component
+public class MonitorFilter implements OrderedFilter {
+
+    private final static String HEADER_NAME = "Authorization";
+    private final static String Authorization_Head = "Bearer ";
+
+    // Order defaults to after Request Context filter
+    private int order = REQUEST_WRAPPER_FILTER_MAX_ORDER - 104;
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -31,6 +45,13 @@ public class MonitorFilter implements Filter {
             return;
         }
 
+        String header = request.getHeader(HEADER_NAME);
+        if (StringUtils.isBlank(header) || !header.startsWith(Authorization_Head)) {
+            resp.getWriter().print(new GlobalResult(new SuccessResp("token不合法")));
+            return;
+        }
+
+        LocalUtil.setSession(header.substring(Authorization_Head.length()));
         chain.doFilter(request, response);
     }
 
@@ -39,4 +60,8 @@ public class MonitorFilter implements Filter {
 
     }
 
+    @Override
+    public int getOrder() {
+        return this.order;
+    }
 }

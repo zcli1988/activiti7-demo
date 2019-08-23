@@ -7,4 +7,5 @@ package org.activiti.examples.service;
 public interface LoginService {
 
     Object login(String username, String password);
+
 }
