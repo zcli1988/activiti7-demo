@@ -30,13 +30,13 @@ import javax.annotation.Resource;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
-    private MyUserService userService;
+    private UserDetailsService userDetailsService;
     @Resource
     private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(new PasswordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(new PasswordEncoder());
     }
 
     @Override
@@ -48,11 +48,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
+//                .antMatchers("/login").permitAll()
                 .anyRequest().access("@rbacService.hasPermission(request,authentication)")
 
                 .and()
-                .addFilterBefore(new AuthenticationFilter(userService, redisTemplate), AnonymousAuthenticationFilter.class)
+                .addFilterBefore(new AuthenticationFilter(userDetailsService, redisTemplate), AnonymousAuthenticationFilter.class)
 
                 .logout()
                 .addLogoutHandler((request, response, authentication) -> redisTemplate.delete(LocalUtil.getSession()))
