@@ -1,9 +1,7 @@
 package org.activiti.examples.filter;
 
 import io.micrometer.core.instrument.util.StringUtils;
-import org.activiti.examples.context.GlobalResult;
 import org.activiti.examples.context.LocalUtil;
-import org.activiti.examples.resp.SuccessResp;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.stereotype.Component;
 
@@ -40,18 +38,16 @@ public class MonitorFilter implements OrderedFilter {
         response.setHeader("Access-Control-Allow-Origin", "*");
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(200);
-            response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+            response.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
             response.setHeader("Access-Control-Allow-Methods", "HEAD,GET,PUT,OPTIONS,PATCH,DELETE,POST");
             return;
         }
 
         String header = request.getHeader(HEADER_NAME);
-        if (StringUtils.isBlank(header) || !header.startsWith(Authorization_Head)) {
-            resp.getWriter().print(new GlobalResult(new SuccessResp("token不合法")));
-            return;
+        if (StringUtils.isNotBlank(header) && header.startsWith(Authorization_Head)) {
+            LocalUtil.setSession(header.substring(Authorization_Head.length()));
         }
 
-        LocalUtil.setSession(header.substring(Authorization_Head.length()));
         chain.doFilter(request, response);
     }
 
