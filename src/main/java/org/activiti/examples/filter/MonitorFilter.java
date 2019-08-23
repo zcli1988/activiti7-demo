@@ -22,7 +22,7 @@ public class MonitorFilter implements OrderedFilter {
     private final static String HEADER_NAME = "Authorization";
     private final static String Authorization_Head = "Bearer ";
 
-    // Order defaults to after Request Context filter
+    // 当前Filter的执行顺序，保证在spring security之前执行
     private int order = REQUEST_WRAPPER_FILTER_MAX_ORDER - 104;
 
     @Override
@@ -35,6 +35,7 @@ public class MonitorFilter implements OrderedFilter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
 
+        //跨域访问支持
         response.setHeader("Access-Control-Allow-Origin", "*");
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(200);
@@ -43,10 +44,15 @@ public class MonitorFilter implements OrderedFilter {
             return;
         }
 
+        //获取当前请求的token，存入当前线程变量
         String header = request.getHeader(HEADER_NAME);
         if (StringUtils.isNotBlank(header) && header.startsWith(Authorization_Head)) {
             LocalUtil.setSession(header.substring(Authorization_Head.length()));
         }
+
+        //设置全局响应格式为json
+        response.setContentType("application/json;charset=UTF-8");
+        response.setCharacterEncoding("utf8");
 
         chain.doFilter(request, response);
     }

@@ -31,7 +31,7 @@ public class MyUserService implements UserDetailsService {
             throw new UsernameNotFoundException("用户" + username + "不存在");
         }
         RolePo rolePo = userMapper.selectRoleByUserId(user.getId());
-        //用户权限
+        //activiti权限
         List<SimpleGrantedAuthority> authorities = new ArrayList<>(1);
         if (StringUtils.isNotBlank(rolePo.getCode())) {
             authorities.add(new SimpleGrantedAuthority(rolePo.getCode().trim()));

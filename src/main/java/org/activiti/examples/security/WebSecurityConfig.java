@@ -1,7 +1,10 @@
 package org.activiti.examples.security;
 
+import com.alibaba.fastjson.JSON;
+import org.activiti.examples.context.GlobalResult;
 import org.activiti.examples.context.LocalUtil;
 import org.activiti.examples.filter.AuthenticationFilter;
+import org.activiti.examples.resp.SuccessResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,23 +36,34 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(new MyPasswordEncoder());
+        auth.userDetailsService(userService).passwordEncoder(new PasswordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
+        httpSecurity
+                .csrf().disable()
+
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .anyRequest().access("@rbacService.hasPermission(request,authentication)")
+
                 .and()
                 .addFilterBefore(new AuthenticationFilter(userService, redisTemplate), AnonymousAuthenticationFilter.class)
-                .logout().addLogoutHandler((request, response, authentication) -> {
-//            SecurityContextHolder.clearContext();
-            redisTemplate.delete(LocalUtil.getSession());
-        }).logoutSuccessHandler(new LogoutSuccessHandler());
+
+                .logout()
+                .addLogoutHandler((request, response, authentication) -> redisTemplate.delete(LocalUtil.getSession()))
+                .logoutSuccessHandler((request, response, authentication) -> response.getWriter().print(JSON.toJSONString(new GlobalResult(new SuccessResp()))))
+
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(((request, response, accessDeniedException) -> response.getWriter().print(JSON.toJSONString(new GlobalResult(new SuccessResp("无访问权限"))))))
+
+                .and()
+                .rememberMe().disable();
     }
 
     @Bean

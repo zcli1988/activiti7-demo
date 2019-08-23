@@ -1,13 +1,14 @@
 package org.activiti.examples.security;
 
 import org.activiti.examples.util.MD5Util;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
+ * 用户密码编码、匹配器
+ *
  * @author wangkai
  * @since JDK8
  */
-public class MyPasswordEncoder implements PasswordEncoder {
+public class PasswordEncoder implements org.springframework.security.crypto.password.PasswordEncoder {
     @Override
     public String encode(CharSequence rawPassword) {
         return MD5Util.md5((String) rawPassword);
