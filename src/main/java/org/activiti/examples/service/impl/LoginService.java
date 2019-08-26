@@ -2,7 +2,6 @@ package org.activiti.examples.service.impl;
 
 import org.activiti.examples.Config;
 import org.activiti.examples.resp.SuccessResp;
-import org.activiti.examples.service.LoginService;
 import org.activiti.examples.util.UUIDUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,14 +18,13 @@ import java.util.concurrent.TimeUnit;
  * @since JDK8
  */
 @Service
-public class LoginServiceImpl implements LoginService {
+public class LoginService {
 
     @Resource
     private AuthenticationManager authenticationManager;
     @Resource
     private RedisTemplate<String, String> redisTemplate;
 
-    @Override
     public Object login(String username, String password) {
         UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
         final Authentication authentication = authenticationManager.authenticate(upToken);

@@ -1,7 +1,7 @@
 package org.activiti.examples.controller;
 
 import org.activiti.examples.req.LoginReq;
-import org.activiti.examples.service.LoginService;
+import org.activiti.examples.service.impl.LoginService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
