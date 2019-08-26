@@ -1,7 +1,6 @@
 package org.activiti.examples.filter;
 
 import org.activiti.examples.context.LocalUtil;
-import org.activiti.examples.security.MyUserService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

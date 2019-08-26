@@ -1,8 +1,10 @@
 package org.activiti.examples.service.impl;
 
 import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.api.process.model.builders.GetProcessDefinitionsPayloadBuilder;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.api.runtime.shared.query.Page;
 import org.activiti.api.runtime.shared.query.Pageable;
 import org.activiti.examples.resp.SuccessResp;
 import org.activiti.examples.service.ProcessService;
@@ -33,12 +35,21 @@ public class ProcessServiceImpl implements ProcessService {
                 .withVariable("fileContent", content)
                 .build());
         String message = ">>> Created Process Instance: " + processInstance;
-        return new SuccessResp(message);
+
+        Page<ProcessInstance> processInstancePage = processRuntime.processInstances(Pageable.of(0,10));
+        return processInstancePage;
+//        return new SuccessResp(message);
     }
 
     @Override
     public Object getProcessInstances() {
         return processRuntime.processInstances(Pageable.of(0, 100));
+    }
+
+    @Override
+    public Object deleteProcess(String key) {
+//        processRuntime.delete
+        return null;
     }
 
 }

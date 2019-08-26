@@ -1,10 +1,7 @@
 package org.activiti.examples.controller;
 
 import org.activiti.examples.service.ProcessService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -32,6 +29,11 @@ public class ProcessController {
     @RequestMapping(value = "instances", method = RequestMethod.GET)
     public Object getProcessInstance() {
         return processService.getProcessInstances();
+    }
+
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
+    public Object delete(@RequestParam String key) {
+        return processService.deleteProcess(key);
     }
 
 }

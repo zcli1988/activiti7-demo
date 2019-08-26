@@ -10,4 +10,6 @@ public interface ProcessService {
     Object startProcess(String content);
 
     Object getProcessInstances();
+
+    Object deleteProcess(String key);
 }
