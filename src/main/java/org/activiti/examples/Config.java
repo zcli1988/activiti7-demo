@@ -11,5 +11,5 @@ public class Config {
     /**
      * 用户认证信息缓存时间：单位分钟
      */
-    public static int expire = 1;
+    public static int expire = 10;
 }
