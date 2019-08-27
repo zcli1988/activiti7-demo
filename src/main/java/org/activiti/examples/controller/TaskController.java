@@ -25,8 +25,13 @@ public class TaskController {
     }
 
     @RequestMapping(value = "task/claim", method = RequestMethod.GET)
-    public Object claim(@RequestParam String taskId) {
-        return taskService.claim(taskId);
+    public Object claimTask(@RequestParam String taskId) {
+        return taskService.claimTask(taskId);
+    }
+
+    @RequestMapping(value = "task/release", method = RequestMethod.GET)
+    public Object release(@RequestParam String taskId) {
+        return taskService.releaseTask(taskId);
     }
 
 }

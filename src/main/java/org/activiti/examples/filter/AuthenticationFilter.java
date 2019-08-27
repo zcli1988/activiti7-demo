@@ -1,5 +1,6 @@
 package org.activiti.examples.filter;
 
+import org.activiti.examples.Config;
 import org.activiti.examples.context.LocalUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 用户认证、授权Filter
@@ -37,6 +39,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         if (token != null) {
             String username = redisTemplate.opsForValue().get(token);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                redisTemplate.opsForValue().set(token, username, Config.expire, TimeUnit.MINUTES);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
                 //工作流授权
