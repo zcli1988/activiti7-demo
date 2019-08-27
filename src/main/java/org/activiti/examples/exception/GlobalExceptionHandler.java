@@ -1,5 +1,6 @@
 package org.activiti.examples.exception;
 
+import org.activiti.examples.context.GlobalResult;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,18 +20,18 @@ public class GlobalExceptionHandler {
     public Object exceptionHandler(Exception e) {
         e.printStackTrace();
         if (e instanceof UsernameNotFoundException) {
-            return "用户不存在";
+            return new GlobalResult(GlobalResult.CODE_FAILED, "用户不存在");
         }
         if (e instanceof CredentialException) {
-            return "证书错误";
+            return new GlobalResult(GlobalResult.CODE_FAILED, "证书错误");
         }
         if (e instanceof AccessDeniedException) {
-            return "不允许访问";
+            return new GlobalResult(GlobalResult.CODE_FAILED, "不允许访问");
         }
         if (e instanceof BadCredentialsException) {
-            return "密码错误";
+            return new GlobalResult(GlobalResult.CODE_FAILED, "密码错误");
         }
-        return e.getMessage();
+        return new GlobalResult(GlobalResult.CODE_FAILED, e.getMessage());
     }
 
 }

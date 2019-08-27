@@ -48,6 +48,11 @@ public class HttpMessageConverter extends FastJsonHttpMessageConverter4 {
         }
 
         outputMessage.getHeaders().set("ret", "0");
+        if (obj instanceof GlobalResult) {
+            super.writeInternal(obj, outputMessage);
+            return;
+        }
+
         super.writeInternal(new GlobalResult(obj), outputMessage);
     }
 
